@@ -124,7 +124,22 @@
   $('settings-button').addEventListener('click',openSettings);
   $('map-button').addEventListener('click',openMap);
   $('help-button').addEventListener('click',openProgress);
-  $('start-play').addEventListener('click',()=>{$('start-screen').classList.add('hidden');save();});
+  async function requestPhoneLandscape(){
+    const phone = window.matchMedia('(max-width: 900px)').matches;
+    if(!phone) return;
+    try {
+      if(!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+      if(screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('landscape');
+      }
+    } catch (error) {
+      // Some mobile browsers only allow manual rotation; the CSS prompt handles portrait mode.
+      toast('For the best view, turn your phone sideways.');
+    }
+  }
+  $('start-play').addEventListener('click',async()=>{$('start-screen').classList.add('hidden');save();await requestPhoneLandscape();});
   $('start-new').addEventListener('click',()=>{if(confirm('Start a new Pixel Plaza save? Your current local save will be replaced.')){state=fresh();save();$('start-screen').classList.add('hidden');toast('A fresh little town awaits!');}});
   // Replace the prototype's placeholder shop action before its target handler runs.
   $('shop-action').addEventListener('click',e=>{if(!$('shop-action').disabled){e.preventDefault();e.stopImmediatePropagation();const name=$('modal-title').textContent;$('modal-backdrop').classList.add('hidden');openShopPlay(name);}},true);
