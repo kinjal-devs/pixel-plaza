@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3d9bd">
+  <title>Pixel Plaza</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Pixel Plaza home"><span class="brand-mark">✿</span><span>PIXEL PLAZA<small>your little shopping town</small></span></a>
+      <div class="hud">
+        <div class="coin-pill"><span>●</span><b id="coins">120</b><small>coins</small></div>
+        <button class="icon-button" id="map-button" aria-label="Open town map">⌖</button>
+        <button class="icon-button" id="help-button" aria-label="How to play">?</button>
+      </div>
+    </header>
+
+    <section class="game-frame" aria-label="Pixel Plaza game">
+      <div class="scene-heading"><span id="district-name">CENTRAL PLAZA</span><span class="day-label">☀ DAY 1</span></div>
+      <canvas id="town" width="960" height="640" aria-label="Isometric shopping town. Use arrow keys or WASD to move."></canvas>
+      <div class="toast" id="toast" role="status"></div>
+      <div class="mobile-controls" aria-label="Touch controls">
+        <div class="joystick" id="joystick"><span class="stick" id="stick"></span></div>
+        <button class="action-button" id="action-button">TALK<br><small>INTERACT</small></button>
+      </div>
+      <div class="bottom-hint">WASD / ARROW KEYS TO MOVE <span>•</span> TAP A SHOP TO VISIT</div>
+    </section>
+    <footer class="footer"><span>♡ Made for cosy little adventures</span><span>PIXEL PLAZA · EARLY PLAYABLE BUILD</span></footer>
+  </main>
+
+  <div class="modal-backdrop hidden" id="modal-backdrop">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+      <div class="modal-icon" id="modal-icon">☕</div>
+      <p class="eyebrow" id="modal-district">FOOD STREET</p>
+      <h1 id="modal-title">Cozy Cup</h1>
+      <p id="modal-description">A warm little café filled with sweet treats.</p>
+      <div class="shop-status" id="shop-status">OPEN FOR BUSINESS</div>
+      <div class="modal-actions">
+        <button class="primary-button" id="shop-action">Enter shop</button>
+        <button class="secondary-button" id="modal-back">Back to town</button>
+      </div>
+    </section>
+  </div>
+  <div class="modal-backdrop hidden" id="info-backdrop">
+    <section class="modal info-modal" role="dialog" aria-modal="true" aria-labelledby="info-title">
+      <button class="modal-close" id="info-close" aria-label="Close">×</button>
+      <div class="modal-icon">🗺️</div>
+      <h1 id="info-title">Town map</h1>
+      <div id="info-content"></div>
+      <button class="primary-button full-button" id="info-done">Back to town</button>
+    </section>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
