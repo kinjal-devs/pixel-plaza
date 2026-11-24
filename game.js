@@ -42,7 +42,7 @@
     ['#a6bd91','#e1e9c9','#65805c'],['#d5ad73','#f2dfad','#947044'],['#c98fa5','#f0d0d8','#925b73']
   ];
   function drawBuilding(shop){
-    const p=iso(shop.x,shop.y), w=82, bh=58, roofY=p.y-53;
+    const p=iso(shop.x*1.45,shop.y*1.45), w=76, bh=58, roofY=p.y-53;
     const palette=shopPalettes[(shop.id-1)%shopPalettes.length], wall=palette[1], trim=palette[0], dark=palette[2];
     // Ground shadow and raised stone foundation
     ctx.fillStyle='#617a5540';ctx.beginPath();ctx.ellipse(p.x+3,p.y+15,49,19,0,0,Math.PI*2);ctx.fill();
@@ -81,11 +81,11 @@
     ctx.fillStyle='#765344';ctx.fillRect(p.x-28,roofY+35,3,12);ctx.fillRect(p.x+43,roofY+35,3,12);
     ctx.fillStyle='#fff8e9';ctx.strokeStyle='#765344';ctx.lineWidth=2;
     ctx.fillRect(p.x-39,roofY+18,78,18);ctx.strokeRect(p.x-39,roofY+18,78,18);
-    ctx.fillStyle=dark;ctx.font='bold 9px Nunito, sans-serif';ctx.textAlign='center';
+    ctx.fillStyle=dark;ctx.font='600 12px Arial, Helvetica, sans-serif';ctx.textAlign='center';
     ctx.fillText(shop.name,p.x,roofY+30);
     // Tiny hanging lamp and open/locked marker
     ctx.fillStyle='#f6d889';ctx.beginPath();ctx.arc(p.x+48,roofY+48,4,0,Math.PI*2);ctx.fill();
-    if(!shop.open){ctx.fillStyle='#67483c';ctx.font='bold 8px Nunito';ctx.fillText('LOCKED',p.x+19,p.y+24);}
+    if(!shop.open){ctx.fillStyle='#67483c';ctx.font='600 11px Arial, Helvetica, sans-serif';ctx.fillText('LOCKED',p.x+19,p.y+24);}
     shop.hit={x:p.x,y:roofY+74,r:48};
   }
   function drawTree(x,y){
@@ -146,7 +146,7 @@
     ctx.fillStyle='#fff2ca';ctx.beginPath();ctx.arc(center.x,center.y-43,6,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#c5e7df';ctx.beginPath();ctx.arc(center.x-14,center.y-16,3,0,Math.PI*2);ctx.arc(center.x+15,center.y-6,2,0,Math.PI*2);ctx.fill();
     // Street name markers
-    ctx.font='900 13px Nunito';ctx.textAlign='center';ctx.fillStyle='#fff8e9';ctx.strokeStyle='#82654f';ctx.lineWidth=3;
+    ctx.font='700 15px Arial, Helvetica, sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff8e9';ctx.strokeStyle='#82654f';ctx.lineWidth=3;
     [['FOOD STREET',-2,-7],['FASHION STREET',7,-1],['CREATIVE STREET',-7,4],['LIFESTYLE STREET',6,6]].forEach(([t,x,y])=>{const p=iso(x,y);ctx.strokeText(t,p.x,p.y);ctx.fillText(t,p.x,p.y);});
     // Street furniture, flower beds and leafy trees
     drawTree(-7,-5);drawTree(7,-5);drawTree(-7,7);drawTree(7,7);
@@ -180,7 +180,7 @@
   }
   function interact(){
     const here=iso(player.x,player.y);
-    const nearby=shops.map(s=>({s,d:Math.hypot(iso(s.x,s.y).x-here.x,iso(s.x,s.y).y-here.y)})).sort((a,b)=>a.d-b.d)[0];
+    const nearby=shops.map(s=>({s,d:Math.hypot(iso(s.x*1.45,s.y*1.45).x-here.x,iso(s.x*1.45,s.y*1.45).y-here.y)})).sort((a,b)=>a.d-b.d)[0];
     if(nearby&&nearby.d<95)openShop(nearby.s);else showToast('Walk closer to a shop to interact!');
   }
   function move(dx,dy,dt){
