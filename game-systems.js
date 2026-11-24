@@ -32,7 +32,7 @@
     'Fruit & Grocery Shop':['Berry basket','Apple bag','Fresh oranges']
   };
   const fresh = () => ({
-    coins:120, level:1, reputation:0, sales:0, day:1, currentShop:'Cozy Cup',
+    coins:120, level:1, reputation:0, sales:0, day:1, dailyRewardDate:'', dailyStreak:0, currentShop:'Cozy Cup',
     unlocked:['Cozy Cup','Golden Petal','Bloom & Blossom','Tiny Toybox'],
     inventory:{'Coffee beans':8,'Milk':8,'Sugar':8,'Paper bags':8,'Flower stems':8,'Gift wrap':8},
     wardrobe:{hair:'Chestnut bob',hairColor:'#754b3c',outfit:'Daisy dress',skin:'#e8b18e',accessory:'Pink bow',shoes:'Mary Janes'},
@@ -83,7 +83,7 @@
   }
   function openTasks(){
     const tasks=[['serve3','Serve 3 customers',3,Math.min(state.sales,3)],['earn100','Earn 100 coins from sales',100,Math.min(state.sales*15,100)],['visit4','Open your town map','4',state.unlocked.length]];
-    open('Daily tasks & rewards','<p>Little goals help your town grow. Rewards are virtual coins.</p><div class="task-list">'+tasks.map(([id,label,goal,progress])=>'<div class="task-item"><b>'+esc(label)+'</b><small>'+(id==='earn100'?progress+' / '+goal:id==='serve3'?progress+' / '+goal:progress+' / '+goal+' shops open')+'</small>'+button(state.completedTasks.includes(id)?'Collected ✓':'Collect 20 coins','task:'+id,state.completedTasks.includes(id)?'systems-secondary':'systems-primary')+'</div>').join('')+'</div>'+button('Back to town','close','systems-secondary'));
+    const today=new Date().toLocaleDateString();\n    open('Daily tasks & rewards','<p>Little goals help your town grow. Rewards are virtual coins.</p><div class="reward-card"><span>🎁</span><h3>Daily welcome gift</h3><p>Come back each day for a little coin bonus.</p>'+button(state.dailyRewardDate===today?'Collected today ✓':'Collect daily gift · 25 coins','daily-reward',state.dailyRewardDate===today?'systems-secondary':'systems-primary')+'</div><div class="task-list">'+tasks.map(([id,label,goal,progress])=>'<div class="task-item"><b>'+esc(label)+'</b><small>'+(id==='earn100'?progress+' / '+goal:id==='serve3'?progress+' / '+goal:progress+' / '+goal+' shops open')+'</small>'+button(state.completedTasks.includes(id)?'Collected ✓':'Collect 20 coins','task:'+id,state.completedTasks.includes(id)?'systems-secondary':'systems-primary')+'</div>').join('')+'</div>'+button('Back to town','close','systems-secondary'));
   }
   function openSettings(){
     open('Settings',`<div class="setting-row"><label>Music volume</label><input type="range" min="0" max="100" value="${state.settings.music}" data-setting="music"><b>${state.settings.music}%</b></div><div class="setting-row"><label>Sound effects</label><input type="range" min="0" max="100" value="${state.settings.sfx}" data-setting="sfx"><b>${state.settings.sfx}%</b></div><div class="setting-row"><label>Language</label><select data-setting="language"><option>English</option><option>हिन्दी</option><option>मराठी</option></select></div><div class="setting-row"><label>Controls</label><span>Keyboard + mobile joystick</span></div><p class="systems-note">Your game saves automatically on this device.</p>${button('Save settings','save')}${button('Load saved game','load','systems-secondary')}${button('Back to town','close','systems-secondary')}`);
@@ -108,7 +108,7 @@
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action;
     if(a==='close'){close();return;}sound();
-    if(a==='serve'){serve();return;}if(a==='next-order'){openShopPlay(state.currentShop);return;}
+    if(a==='serve'){serve();return;}if(a==='next-order'){openShopPlay(state.currentShop);return;}if(a==='daily-reward'){const today=new Date().toLocaleDateString();if(state.dailyRewardDate===today){toast('You already collected today’s gift!');return;}state.dailyRewardDate=today;state.dailyStreak++;state.coins+=25;save();openTasks();toast('Daily gift collected! +25 coins');return;}
     if(a==='restock'){if(state.coins<15){toast('Not enough coins to restock.');return;}state.coins-=15;Object.keys(state.inventory).forEach(k=>state.inventory[k]+=5);save();openInventory();toast('Supplies restocked!');return;}
     if(a==='save'){save();toast('Game saved on this device!');return;}if(a==='load'){try{const loaded=JSON.parse(localStorage.getItem('pixelPlazaSave')||'null');if(loaded){state=Object.assign(fresh(),loaded);save();openSettings();toast('Saved town loaded!');}else toast('No saved town found yet.');}catch{toast('Could not load the saved town.');}return;}if(a==='upgrade'){upgrade();return;}if(a==='unlock'){unlockShop();openProgress();return;}if(a==='tasks'){openTasks();return;}
     if(a.startsWith('task:')){const id=a.split(':')[1];if(state.completedTasks.includes(id)){toast('Reward already collected.');return;}const eligible=id==='serve3'?state.sales>=3:id==='earn100'?state.sales*15>=100:state.unlocked.length>=4;if(!eligible){toast('Complete the task first!');return;}state.completedTasks.push(id);state.coins+=20;save();openTasks();toast('+20 coins reward!');return;}
